@@ -45,6 +45,8 @@ function add_custom_meta_box()
 {   
     add_meta_box("table_meta_in_post", "Table Meta Content", "custom_meta_box_markup", "post", "advanced", "high", null);
 }
+add_action( 'add_meta_boxes','add_custom_meta_box' );
+add_action( 'save_post','wporg_save_postdata' );
 
 function wporg_save_postdata( $post_id ) {
 	if ( array_key_exists( 'txtcompanyName', $_POST ) ) {
