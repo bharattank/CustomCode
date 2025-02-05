@@ -1,0 +1,38 @@
+Direct download without preview on all browser (Chrome, Firefox, Edge, Safari).
+<script>
+      jQuery(document).ready(function ($) {
+          // Attach a click event handler to elements with the class 'download-link'
+          $('.diet-chart-download-btn .sf__btn').on('click', function(e) {
+              e.preventDefault(); // Prevent default navigation
+
+    var fileUrl = $(this).attr("href");
+
+    fetch(fileUrl)
+        .then(response => response.blob())
+        .then(blob => {
+            var fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1).split("?")[0]; // Extract filename
+            var blobUrl = URL.createObjectURL(blob);
+
+            var link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = fileName;
+
+            // ✅ Check if Safari is being used
+            var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+            if (isSafari) {
+                // Use the download link approach for Safari
+                link.click();
+                URL.revokeObjectURL(blobUrl); // Cleanup Blob URL
+            } else {
+                // ✅ Chrome, Firefox, Edge - Use normal download approach
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(blobUrl); // Cleanup Blob URL
+            }
+        })
+        .catch(error => console.error("Download failed:", error));
+          });
+      });
+    </script>
